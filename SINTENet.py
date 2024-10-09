@@ -60,12 +60,12 @@ if __name__ == '__main__':
 
     for n in range(100):
         optim.zero_grad()
-        y = loss(v_torch, net, fi, lb)
+        y = loss(v_torch, net,fi[:,0],lb[0,:])
 
         y.backward()
 
         optim.step()
-        print(n.y.item())
+        print(n,y.item())
 
     qq = 0
 

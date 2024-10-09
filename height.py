@@ -1,6 +1,6 @@
 import math
 
-import math
+
 
 C_LGN1 = 1
 K_LGN1 = 1
@@ -33,13 +33,33 @@ def LGN1(M: int, N: int, X):
             C_LGN1 = D
             return C_LGN1
 
+NormGrav = [
+    {"GamE": 978030.00000, "Bt": 0.0053020, "Bt1": 0.0000070, "C20": -1083.46E-06, "C40": 2.72E-06, "aE": 0},
+    {"GamE": 978049.00000, "Bt": 0.0052884, "Bt1": 0.0000059, "C20": -1091.87E-06, "C40": 2.42E-06, "aE": 6378172},
+    {"GamE": 978031.80000, "Bt": 0.0053024, "Bt1": 0.0000059, "C20": -1082.78E-06, "C40": 2.37E-06, "aE": 6378172},
+    {"GamE": 978031.85000, "Bt": 0.0053024, "Bt1": 0.0000059, "C20": -1083.63E-06, "C40": 1.62E-06, "aE": 6378172},
+    {"GamE": 978032.53359, "Bt": 0, "Bt1": 0, "C20": -1082.63E-06, "C40": 2.37E-06, "aE": 6371008.7714, "e": 8.1819190842622E-2}
+]
+
+from read_harmonics import read_gfc
+K_vbv = read_gfc()
+
+BaseC20  = K_vbv[2, 0]
+BaseC40  = K_vbv[4, 0]
+
+
+def NormGamm(GT: int, S2Fi: float, S22Fi: float) -> float:
+    return NormGrav[GT]["GamE"] * (1 + NormGrav[GT]['Bt'] * S2Fi
+                                   - NormGrav[GT]['Bt1'] * S22Fi)
+
+
 
 # VBV4(MidRad,VKGFlag,GammTyp,fi,DegToRad(OutData[mainI].lb),N0,Koef,OutData[mainI].h);
-def height(MR,VFlag, GamT, FI , N0, K_vbv):
-        C_LGN1 = 0.0
-        K_LGN1 = 0
-        B_LGN1 = 0.0
-        H_LGN1 = 0.0
+def height(MR,VFlag, GamT, FI ,AL, N0):
+        # C_LGN1 = math.sqrt(0.5)
+        # K_LGN1 = 0
+        # B_LGN1 = 0.0
+        # H_LGN1 = C_LGN1
         RadiusGamm = 1.0
         if VFlag:
             RadiusGamm = MR
@@ -56,8 +76,8 @@ def height(MR,VFlag, GamT, FI , N0, K_vbv):
             FI = math.atan(math.tan(FI) * (1 - (1 / 298.257)) * (1 - (1 / 298.257)))
             sinFI = math.sin(FI)
 
-        K_vbv[2][0] = BaseC20 - NormGrav[GamT].C20 / math.sqrt(5)
-        K_vbv[4][0] = BaseC40 - NormGrav[GamT].C40 / math.sqrt(9)
+        koef[2][0] = BaseC20 - NormGrav[GamT]["C20"] / math.sqrt(5)
+        koef[4][0] = BaseC40 - NormGrav[GamT]["C40"] / math.sqrt(9)
 
         B_vbv = 0.0
 
@@ -95,7 +115,7 @@ if __name__ == '__main__':
     FI   = -math.pi*0.5
     AL   =  0.0
     MR   =  6378136.46 # m
-
+    GamT = 0
 
     #VBV4     (MidRad,VKGFlag,GammTyp,fi,DegToRad(OutData[mainI].lb),N0,           Koef,OutData[mainI].h);
-    h = height(MR,    True,   GamT,   FI ,AL,                       koef.shape[0], koef)
+    h = height(MR,    True,   GamT,   FI ,AL,                       koef.shape[0])

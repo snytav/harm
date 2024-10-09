@@ -35,7 +35,11 @@ def get_result(v_torch,net,fi,al,name):
             t = torch.tensor([f,a]).float()
             h = net(t)
             res[i][j] = h
-            file1.write('fi '+'{:15.5f}'.format(f))
+            file1.write(' fi '+'{:15.5f}'.format(f)+
+                        ' lb '+'{:15.5f}'.format(a)+
+                        ' h_sintegrav ' + '{:15.5f}'.format(v_torch[i][j])
+                        'fi ' + '{:15.5f}'.format(f)
+                        )
 
             #y += torch.abs(v_torch[i][j]-h)
 

@@ -51,16 +51,25 @@ if __name__ == '__main__':
     lb = lb.reshape(N_fi,N_al)
     v_torch = torch.from_numpy(v)
 
+    N_train_FI = 10
+    N_train_AL = 10
+
+    v_train  = v[:N_train_FI,:N_train_AL]
+    fi_train = fi[:N_train_FI, :N_train_AL]
+    lb_train = lb[:N_train_FI, :N_train_AL]
+
+
+
 
     net = SINTENet(10)
 
-    y = loss(v_torch,net,fi[:,0],lb[0,:])
+    # y = loss(v_torch,net,fi[:,0],lb[0,:])
 
     optim = torch.optim.Adam(net.parameters(),lr = 0.01)
 
     for n in range(100):
         optim.zero_grad()
-        y = loss(v_torch, net,fi[:,0],lb[0,:])
+        y = loss(v_train, net,fi_train[:,0],lb_train[0,:])
 
         y.backward()
 

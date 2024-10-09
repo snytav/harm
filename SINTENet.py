@@ -25,6 +25,21 @@ def loss(v_torch,net,fi,al):
 
     return y
 
+def get_result(v_torch,net,fi,al,name):
+    res = torch.zeros_like(v_torch)
+
+    file1 = open(name+".txt", "w")
+
+    for i,f in enumerate(fi):
+        for j,a in enumerate(al):
+            t = torch.tensor([f,a]).float()
+            h = net(t)
+            res[i][j] = h
+            file1.write('fi '+'{:15.5f}'.format(f))
+
+            #y += torch.abs(v_torch[i][j]-h)
+
+
 
 if __name__ == '__main__':
     import numpy as np
@@ -77,6 +92,7 @@ if __name__ == '__main__':
         print(n,y.item())
 
     qq = 0
+
 
 
 
